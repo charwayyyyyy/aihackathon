@@ -2,6 +2,7 @@
 
 import { useCartStore } from '@/store/useCartStore';
 import { useUIStore } from '@/store/useUIStore';
+import { useOrderStore } from '@/store/useOrderStore';
 import { useQuery } from '@tanstack/react-query';
 import { merchantService } from '@/services/api';
 import { formatWhatsAppMessage } from '@/utils/checkout';
@@ -14,23 +15,42 @@ import { useState } from 'react';
 export default function OrdersPage() {
   const { items, getTotalPrice, removeItem } = useCartStore();
   const openCart = useUIStore((state) => state.openCart);
+  const addOrder = useOrderStore((state) => state.addOrder);
   const [activeTab, setActiveTab] = useState<'cart' | 'tracking'>('cart');
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [showCustomerForm, setShowCustomerForm] = useState(false);
+  const [customerData, setCustomerData] = useState({ name: '', phone: '', location: '' });
 
   const { data: merchant } = useQuery({
     queryKey: ['merchant'],
     queryFn: () => merchantService.getMerchant('mensah'),
   });
 
-  const handleCheckout = () => {
+  const handleCheckoutClick = () => {
+    setShowCustomerForm(true);
+  };
+
+  const handleConfirmCheckout = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!merchant?.whatsapp_number) return;
     setIsCheckingOut(true);
     
+    // Save to order store
+    addOrder({
+      id: `ORD-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+      items: [...items],
+      total: getTotalPrice(),
+      customer: customerData,
+      createdAt: new Date().toISOString()
+    });
+
     const whatsappUrl = formatWhatsAppMessage(
       items, 
       getTotalPrice(), 
       merchant.whatsapp_number
     );
+    
+    setShowCustomerForm(false);
     
     // Smooth transition delay
     setTimeout(() => {
@@ -116,7 +136,7 @@ export default function OrdersPage() {
                     <p className="text-xs uppercase tracking-widest text-black/50 mb-2">Subtotal</p>
                     <p className="text-3xl font-serif mb-8 text-luxury">GHS {getTotalPrice().toLocaleString()}</p>
                     <button 
-                      onClick={handleCheckout}
+                      onClick={handleCheckoutClick}
                       disabled={isCheckingOut}
                       className="bg-black text-white px-12 py-5 text-xs uppercase tracking-[0.2em] font-bold hover:bg-luxury transition-all flex items-center gap-3 disabled:bg-black/20"
                     >
@@ -147,6 +167,34 @@ export default function OrdersPage() {
         </div>
       </div>
       
+      {showCustomerForm && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-white p-8 max-w-md w-full shadow-2xl">
+            <h2 className="text-2xl font-serif mb-6">Delivery Details</h2>
+            <form onSubmit={handleConfirmCheckout} className="space-y-4">
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-black/60 mb-2">Name</label>
+                <input required type="text" className="w-full border border-gray-200 p-3 focus:outline-none focus:border-luxury" value={customerData.name} onChange={e => setCustomerData({...customerData, name: e.target.value})} />
+              </div>
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-black/60 mb-2">Phone</label>
+                <input required type="tel" className="w-full border border-gray-200 p-3 focus:outline-none focus:border-luxury" value={customerData.phone} onChange={e => setCustomerData({...customerData, phone: e.target.value})} />
+              </div>
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-black/60 mb-2">Delivery Location</label>
+                <input required type="text" className="w-full border border-gray-200 p-3 focus:outline-none focus:border-luxury" value={customerData.location} onChange={e => setCustomerData({...customerData, location: e.target.value})} />
+              </div>
+              <div className="flex gap-4 pt-4">
+                <button type="button" onClick={() => setShowCustomerForm(false)} className="flex-1 py-4 border border-black text-xs uppercase tracking-widest font-bold hover:bg-black hover:text-white transition-colors">Cancel</button>
+                <button type="submit" disabled={isCheckingOut} className="flex-1 py-4 bg-black text-white text-xs uppercase tracking-widest font-bold hover:bg-luxury transition-colors disabled:opacity-50">
+                  {isCheckingOut ? 'Processing...' : 'Confirm'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </main>
   );

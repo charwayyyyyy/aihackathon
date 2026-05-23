@@ -4,15 +4,24 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { merchantService } from '@/services/api';
+import { useState } from 'react';
+import SignInModal from '@/components/auth/SignInModal';
 
 export default function Logo() {
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
   const { data: merchant } = useQuery({
     queryKey: ['merchant'],
     queryFn: () => merchantService.getMerchant('mensah'),
   });
 
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsSignInOpen(true);
+  };
+
   return (
-    <Link href="/" className="group flex flex-col items-center">
+    <>
+      <Link href="/" onClick={handleLogoClick} className="group flex flex-col items-center">
       {merchant?.logo_url ? (
         <div className="relative w-32 h-12">
           <Image 
@@ -32,7 +41,9 @@ export default function Logo() {
             Savile Row Quality
           </span>
         </>
-      )}
-    </Link>
+        )}
+      </Link>
+      <SignInModal isOpen={isSignInOpen} onClose={() => setIsSignInOpen(false)} />
+    </>
   );
 }
