@@ -33,7 +33,7 @@ export const merchantService = {
 
     // Ensure whatsapp_number is present (fallback to prompt value if empty)
     if (!data.whatsapp_number || data.whatsapp_number.trim() === "") {
-      data.whatsapp_number = "0592696949";
+      data.whatsapp_number = "233592696949";
     }
 
     return data;

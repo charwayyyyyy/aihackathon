@@ -4,15 +4,6 @@ import { Product } from '@/types';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { resolveImage } from "@/utils/resolveImage";
-
-<Image
-  src={resolveImage(product.image) || ""}
-  alt={product.name}
-  width={400}
-  height={400}
-/>
-
 
 interface ProductCardProps {
   product: Product;

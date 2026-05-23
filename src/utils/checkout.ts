@@ -15,7 +15,10 @@ export const formatWhatsAppMessage = (items: CartItem[], total: number, merchant
   message += `Please confirm availability and shipping details.`;
 
   const encodedMessage = encodeURIComponent(message);
-  // Clean phone number (remove spaces, etc.)
-  const cleanNumber = merchantNumber.replace(/\D/g, '');
+  // Clean phone number (remove spaces, etc.) and handle leading zero for Ghana
+  let cleanNumber = merchantNumber.replace(/\D/g, '');
+  if (cleanNumber.startsWith('0') && cleanNumber.length === 10) {
+    cleanNumber = '233' + cleanNumber.substring(1);
+  }
   return `https://wa.me/${cleanNumber}?text=${encodedMessage}`;
 };

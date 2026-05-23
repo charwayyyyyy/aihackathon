@@ -11,7 +11,7 @@ export default function WhatsAppButton() {
   });
 
   const handleChat = () => {
-    const phoneNumber = merchant?.whatsapp_number || '+233000000000';
+    const phoneNumber = merchant?.whatsapp_number || '233592696949';
     const message = "Hello Mensah, I would like to inquire about your collections.";
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
