@@ -48,11 +48,11 @@ export default function InventoryTable() {
                 <tr key={product.id} className="hover:bg-gray-50/50 transition-colors">
                   <td className="p-6 flex items-center gap-4">
                     <div className="relative w-12 h-16 bg-gray-100 flex-shrink-0">
-                      <Image src={product.image_url} alt={product.name} fill className="object-cover" />
+                      <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
                     </div>
                     <span className="font-bold">{product.name}</span>
                   </td>
-                  <td className="p-6 capitalize text-black/70">{product.category_id}</td>
+                  <td className="p-6 capitalize text-black/70">{product.category}</td>
                   <td className="p-6 font-serif">GHS {product.price.toLocaleString()}</td>
                   <td className="p-6">
                     {isLowStock ? (
