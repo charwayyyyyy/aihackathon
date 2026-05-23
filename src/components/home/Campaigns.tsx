@@ -12,13 +12,23 @@ export default function Campaigns() {
     queryFn: () => campaignService.getCampaigns(),
   });
 
-  if (isLoading || !campaigns || campaigns.length === 0) return null;
+  const displayCampaigns = campaigns && campaigns.length > 0 ? campaigns : [
+    {
+      id: 'c1',
+      title: 'The Riviera Collection',
+      description: 'Sophisticated linens for the modern traveler.',
+      image_url: 'https://images.unsplash.com/photo-1594932224828-b4b05a83296d?q=80&w=2070&auto=format&fit=crop',
+      link: '/shop?category= Riviera'
+    }
+  ];
+
+  if (isLoading && !campaigns) return null;
 
   return (
     <section className="py-24">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {campaigns.map((campaign, idx) => (
+          {displayCampaigns.map((campaign, idx) => (
             <motion.div
               key={campaign.id}
               initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}

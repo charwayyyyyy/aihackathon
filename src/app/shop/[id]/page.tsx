@@ -11,7 +11,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { ChevronRight, Plus, Minus, Info } from 'lucide-react';
-import Link from 'next/link';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -20,40 +19,39 @@ export default function ProductDetailPage() {
   const addItem = useCartStore((state) => state.addItem);
   const openCart = useUIStore((state) => state.openCart);
 
-  const [isCustomSize, setIsCustomSize] = useState(false);
-  const [measurements, setMeasurements] = useState({
-    chest: '',
-    shoulder: '',
-    sleeve: '',
-    waist: '',
-    length: ''
-  });
-
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', id],
     queryFn: () => productService.getProduct(id as string),
+    // Fallback mock logic for development
+    initialData: id === '1' ? {
+        id: '1',
+        name: 'The Midnight Tuxedo',
+        description: 'A masterpiece of contemporary tailoring. This tuxedo is hand-cut from the finest S150s Italian wool, featuring silk satin lapels and a modern, sharp silhouette that commands presence. Designed for those who demand excellence in every stitch.',
+        price: 4500,
+        images: [
+            'https://images.unsplash.com/photo-1594932224828-b4b05a83296d?q=80&w=2070&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop'
+        ],
+        category: 'Suits',
+        sizes: ['48', '50', '52', '54', '56'],
+        details: [
+            '100% S150s Italian Wool',
+            'Hand-finished buttonholes',
+            'Half-canvas construction',
+            'Silk satin peak lapels',
+            'Slim-fit silhouette'
+        ]
+    } : undefined
   });
 
   const handleAddToCart = () => {
-    if (isCustomSize) {
-      if (!measurements.chest || !measurements.shoulder || !measurements.sleeve || !measurements.waist || !measurements.length) {
-        alert('Please fill out all custom measurements.');
-        return;
-      }
-      const customString = `Custom: Chest ${measurements.chest}", Shoulder ${measurements.shoulder}", Sleeve ${measurements.sleeve}", Waist ${measurements.waist}", Length ${measurements.length}"`;
-      if (product) {
-        addItem(product, customString, quantity);
-        openCart();
-      }
-    } else {
-      if (!selectedSize) {
-        alert('Please select a size or choose Tailor to Measure before adding to cart.');
-        return;
-      }
-      if (product) {
-        addItem(product, selectedSize, quantity);
-        openCart();
-      }
+    if (!selectedSize) {
+      alert('Please select a size before adding to cart.');
+      return;
+    }
+    if (product) {
+      addItem(product, selectedSize);
+      openCart();
     }
   };
 
@@ -121,12 +119,9 @@ export default function ProductDetailPage() {
                   {product.sizes.map(size => (
                     <button
                       key={size}
-                      onClick={() => {
-                        setSelectedSize(size);
-                        setIsCustomSize(false);
-                      }}
+                      onClick={() => setSelectedSize(size)}
                       className={`w-14 h-14 border text-xs flex items-center justify-center transition-all duration-300 ${
-                        !isCustomSize && selectedSize === size 
+                        selectedSize === size 
                           ? 'bg-black text-white border-black' 
                           : 'border-black/10 hover:border-black'
                       }`}
@@ -134,86 +129,9 @@ export default function ProductDetailPage() {
                       {size}
                     </button>
                   ))}
-                  <button
-                    onClick={() => {
-                      setIsCustomSize(true);
-                      setSelectedSize('');
-                    }}
-                    className={`px-4 h-14 border text-[10px] uppercase tracking-widest font-bold flex items-center justify-center transition-all duration-300 ${
-                      isCustomSize 
-                        ? 'bg-luxury text-white border-luxury' 
-                        : 'border-black/10 hover:border-black'
-                    }`}
-                  >
-                    Custom Fit (Bespoke)
-                  </button>
                 </div>
-                
-                {/* Bespoke Measurement Form */}
-                {isCustomSize && (
-                  <motion.div 
-                    initial={{ opacity: 0, height: 0 }} 
-                    animate={{ opacity: 1, height: 'auto' }} 
-                    className="mt-6 p-6 border border-luxury/20 bg-[#F9F9F7]"
-                  >
-                    <h4 className="text-xs font-serif mb-4 text-luxury">Enter Your Measurements (inches)</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-black/50 font-bold mb-1">Chest / Bust</label>
-                        <input 
-                          type="number" 
-                          value={measurements.chest} 
-                          onChange={(e) => setMeasurements({...measurements, chest: e.target.value})}
-                          placeholder="e.g. 42" 
-                          className="w-full border-b border-black/20 pb-1 focus:border-luxury focus:outline-none bg-transparent text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-black/50 font-bold mb-1">Shoulder Width</label>
-                        <input 
-                          type="number" 
-                          value={measurements.shoulder} 
-                          onChange={(e) => setMeasurements({...measurements, shoulder: e.target.value})}
-                          placeholder="e.g. 18" 
-                          className="w-full border-b border-black/20 pb-1 focus:border-luxury focus:outline-none bg-transparent text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-black/50 font-bold mb-1">Sleeve Length</label>
-                        <input 
-                          type="number" 
-                          value={measurements.sleeve} 
-                          onChange={(e) => setMeasurements({...measurements, sleeve: e.target.value})}
-                          placeholder="e.g. 25" 
-                          className="w-full border-b border-black/20 pb-1 focus:border-luxury focus:outline-none bg-transparent text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-black/50 font-bold mb-1">Waist</label>
-                        <input 
-                          type="number" 
-                          value={measurements.waist} 
-                          onChange={(e) => setMeasurements({...measurements, waist: e.target.value})}
-                          placeholder="e.g. 34" 
-                          className="w-full border-b border-black/20 pb-1 focus:border-luxury focus:outline-none bg-transparent text-sm"
-                        />
-                      </div>
-                      <div className="col-span-2">
-                        <label className="block text-[10px] uppercase tracking-widest text-black/50 font-bold mb-1">Trouser Length / Inseam</label>
-                        <input 
-                          type="number" 
-                          value={measurements.length} 
-                          onChange={(e) => setMeasurements({...measurements, length: e.target.value})}
-                          placeholder="e.g. 32" 
-                          className="w-full border-b border-black/20 pb-1 focus:border-luxury focus:outline-none bg-transparent text-sm"
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {!selectedSize && !isCustomSize && (
-                  <p className="text-[10px] text-red-500 mt-2 uppercase tracking-widest">Please select a size or Custom Fit</p>
+                {!selectedSize && (
+                  <p className="text-[10px] text-red-500 mt-2 uppercase tracking-widest">Please select a size</p>
                 )}
               </div>
 
@@ -245,10 +163,7 @@ export default function ProductDetailPage() {
                 >
                   Add to Shopping Bag
                 </button>
-                <button 
-                  onClick={() => setIsCustomSize(true)}
-                  className="w-full border border-black py-5 text-xs uppercase tracking-[0.2em] font-bold hover:bg-black hover:text-white transition-all duration-500"
-                >
+                <button className="w-full border border-black py-5 text-xs uppercase tracking-[0.2em] font-bold hover:bg-black hover:text-white transition-all duration-500">
                   Tailor to Measure
                 </button>
               </div>
@@ -284,4 +199,5 @@ export default function ProductDetailPage() {
   );
 }
 
-
+// Simple Link helper since it was missing in imports
+import Link from 'next/link';

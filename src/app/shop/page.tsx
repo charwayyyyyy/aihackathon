@@ -18,7 +18,47 @@ export default function ShopPage() {
     queryFn: () => productService.getProducts(),
   });
 
-  const displayProducts = products || [];
+  // Mock data if API is empty or failing during development
+  const mockProducts = [
+    {
+      id: '1',
+      name: 'The Midnight Tuxedo',
+      description: 'Hand-tailored from premium Italian wool.',
+      price: 4500,
+      images: ['https://images.unsplash.com/photo-1594932224828-b4b05a83296d?q=80&w=2070&auto=format&fit=crop'],
+      category: 'Suits',
+      sizes: ['S', 'M', 'L', 'XL'],
+    },
+    {
+      id: '2',
+      name: 'Oxford Cotton Shirt',
+      description: 'A timeless classic for any wardrobe.',
+      price: 850,
+      images: ['https://images.unsplash.com/photo-1598411037848-9cda9ec7c39f?q=80&w=1000&auto=format&fit=crop'],
+      category: 'Shirts',
+      sizes: ['M', 'L', 'XL'],
+    },
+    {
+      id: '3',
+      name: 'Silk Bow Tie',
+      description: 'The perfect finishing touch.',
+      price: 350,
+      images: ['https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=1000&auto=format&fit=crop'],
+      category: 'Accessories',
+      sizes: ['One Size'],
+    },
+    {
+        id: '4',
+        name: 'Charcoal Grey Blazer',
+        description: 'Modern fit with a soft shoulder construction.',
+        price: 3200,
+        images: ['https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop'],
+        category: 'Suits',
+        sizes: ['M', 'L', 'XL'],
+      },
+  ];
+
+  const displayProducts = products && products.length > 0 ? products : mockProducts;
 
   const filteredProducts = displayProducts
     .filter(p => selectedCategory === 'All' || p.category === selectedCategory)
