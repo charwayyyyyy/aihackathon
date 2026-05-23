@@ -50,7 +50,7 @@ export default function Home() {
       {/* Campaign Banner Section */}
       <section className="h-[70vh] relative overflow-hidden">
         <div 
-          className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop')] bg-cover bg-fixed bg-center"
+          className="absolute inset-0 bg-[url('/kaftan2.webp')] bg-cover bg-fixed bg-center"
         />
         <div className="absolute inset-0 bg-black/40" />
         <div className="absolute inset-0 flex items-center justify-center text-center px-6">

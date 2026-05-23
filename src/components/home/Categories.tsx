@@ -6,17 +6,17 @@ import Link from 'next/link';
 const categories = [
   {
     name: 'Suits',
-    image: 'https://images.unsplash.com/photo-1593032465175-481ac7f401a0?q=80&w=1000&auto=format&fit=crop',
+    image: '/kaftan.webp',
     href: '/shop?category=suits'
   },
   {
     name: 'Shirts',
-    image: 'https://images.unsplash.com/photo-1598411037848-9cda9ec7c39f?q=80&w=1000&auto=format&fit=crop',
+    image: '/kaftan2.webp',
     href: '/shop?category=shirts'
   },
   {
     name: 'Accessories',
-    image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=1000&auto=format&fit=crop',
+    image: '/kaftan3.webp',
     href: '/shop?category=accessories'
   }
 ];

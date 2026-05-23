@@ -12,23 +12,13 @@ export default function Campaigns() {
     queryFn: () => campaignService.getCampaigns(),
   });
 
-  const displayCampaigns = campaigns && campaigns.length > 0 ? campaigns : [
-    {
-      id: 'c1',
-      title: 'The Heritage Collection',
-      description: 'Rich textures and vibrant Kente accents for the modern gentleman.',
-      image_url: 'https://images.unsplash.com/photo-1610444391696-29171f9f2571?q=80&w=2070&auto=format&fit=crop',
-      link: '/shop?category=Heritage'
-    }
-  ];
-
-  if (isLoading && !campaigns) return null;
+  if (isLoading || !campaigns || campaigns.length === 0) return null;
 
   return (
     <section className="py-24">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {displayCampaigns.map((campaign, idx) => (
+          {campaigns.map((campaign, idx) => (
             <motion.div
               key={campaign.id}
               initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}

@@ -43,6 +43,7 @@ export default function Navbar() {
           <Link href="/shop" className="hover:text-luxury transition-colors">Shop</Link>
           <Link href="/collections" className="hover:text-luxury transition-colors">Collections</Link>
           <Link href="/heritage" className="hover:text-luxury transition-colors">Heritage</Link>
+          <Link href="/orders" className="hover:text-luxury transition-colors">Orders</Link>
         </div>
 
         {/* Logo */}
@@ -89,6 +90,7 @@ export default function Navbar() {
               <Link href="/shop" onClick={() => setIsMobileMenuOpen(false)}>Shop All</Link>
               <Link href="/collections" onClick={() => setIsMobileMenuOpen(false)}>Collections</Link>
               <Link href="/heritage" onClick={() => setIsMobileMenuOpen(false)}>Our Heritage</Link>
+              <Link href="/orders" onClick={() => setIsMobileMenuOpen(false)}>Orders & Cart</Link>
               <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
             </div>
           </motion.div>

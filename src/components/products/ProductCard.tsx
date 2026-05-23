@@ -20,7 +20,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <Link href={`/shop/${product.id}`}>
         <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 mb-6">
           <Image
-            src={product.images[0] || 'https://images.unsplash.com/photo-1594932224828-b4b05a83296d?q=80&w=2070&auto=format&fit=crop'}
+            src={product.images[0] || '/kaftan.webp'}
             alt={product.name}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-110"

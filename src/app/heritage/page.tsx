@@ -32,7 +32,7 @@ export default function HeritagePage() {
               className="relative aspect-[3/4] bg-gray-100"
             >
               <Image 
-                src="https://images.unsplash.com/photo-1542031122-f1e14ffbc309?q=80&w=2000&auto=format&fit=crop" 
+                src="/kaftan3.webp" 
                 alt="Ghanaian Craftsmanship" 
                 fill 
                 className="object-cover"

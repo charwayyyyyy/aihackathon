@@ -31,29 +31,8 @@ export default function FindYourFit() {
   };
 
   const getFilteredProducts = (): Product[] => {
-    const defaultProducts: Product[] = [
-      {
-        id: '1',
-        name: 'The Classic Kaftan',
-        description: 'A timeless piece of Ghanaian elegance.',
-        price: 4500,
-        images: ['https://images.unsplash.com/photo-1605907997930-67a6d91bb3a2?q=80&w=2000&auto=format&fit=crop'],
-        category: 'Kaftans',
-        sizes: ['40R', '42R'],
-      },
-      {
-        id: '2',
-        name: 'Midnight Velvet Agbada',
-        description: 'Command presence at your next traditional wedding.',
-        price: 6200,
-        images: ['https://images.unsplash.com/photo-1584988711833-8a39d8b37494?q=80&w=2071&auto=format&fit=crop'],
-        category: 'Agbada',
-        sizes: ['38R', '40R'],
-      }
-    ];
-
-    const availableProducts = products && products.length > 0 ? products : defaultProducts;
-    return availableProducts.slice(0, 3); // Return top matches
+    if (!products || products.length === 0) return [];
+    return products.slice(0, 3); // Return top matches from API
   };
 
   return (

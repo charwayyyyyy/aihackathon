@@ -48,13 +48,24 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     
     message += `\n*Total: GHS ${getTotalPrice().toLocaleString()}*`;
 
-    // Fallback number if API is empty
-    const phoneNumber = merchant?.whatsapp_number || '+233000000000';
+    const phoneNumber = merchant?.whatsapp_number;
+    if (!phoneNumber) {
+      alert("Merchant WhatsApp number is currently unavailable. Please try again later.");
+      return;
+    }
+    
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     
     window.open(whatsappUrl, '_blank');
-    clearCart();
+    
+    // Track order in localStorage
+    useCartStore.getState().placeOrder({
+      name: customerName,
+      phone: customerPhone,
+      location: deliveryLocation
+    });
+    
     setIsCheckoutMode(false);
     onClose();
   };

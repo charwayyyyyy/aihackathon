@@ -10,7 +10,7 @@ export default function Hero() {
       <div className="absolute inset-0 opacity-60">
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
         {/* You would typically have a high-res image here */}
-        <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1574019472917-7a5cb60f1bc0?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center" />
+        <div className="w-full h-full bg-[url('/kaftan3.webp')] bg-cover bg-center" />
       </div>
 
       <div className="relative z-10 text-center px-6">
