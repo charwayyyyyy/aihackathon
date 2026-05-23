@@ -106,14 +106,14 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 </div>
                 <div className="space-y-3">
                   <Link 
-                    href="/cart"
+                    href="/orders"
                     onClick={onClose}
                     className="w-full bg-black text-white py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-luxury transition-all flex items-center justify-center gap-2"
                   >
                     View Shopping Bag
                   </Link>
                   <Link 
-                    href="/cart"
+                    href="/orders"
                     onClick={onClose}
                     className="w-full border border-black py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-black hover:text-white transition-all flex items-center justify-center gap-2"
                   >

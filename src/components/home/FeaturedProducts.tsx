@@ -12,40 +12,7 @@ export default function FeaturedProducts() {
     queryFn: () => productService.getProducts(),
   });
 
-  const featured = products?.slice(0, 4) || [
-    {
-      id: '1',
-      name: 'The Midnight Tuxedo',
-      price: 4500,
-      images: ['https://images.unsplash.com/photo-1594932224828-b4b05a83296d?q=80&w=2070&auto=format&fit=crop'],
-      category: 'Suits',
-      sizes: ['S', 'M', 'L', 'XL'],
-    },
-    {
-      id: '2',
-      name: 'Oxford Cotton Shirt',
-      price: 850,
-      images: ['https://images.unsplash.com/photo-1598411037848-9cda9ec7c39f?q=80&w=1000&auto=format&fit=crop'],
-      category: 'Shirts',
-      sizes: ['M', 'L', 'XL'],
-    },
-    {
-        id: '4',
-        name: 'Charcoal Grey Blazer',
-        price: 3200,
-        images: ['https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop'],
-        category: 'Suits',
-        sizes: ['M', 'L', 'XL'],
-      },
-      {
-        id: '3',
-        name: 'Silk Bow Tie',
-        price: 350,
-        images: ['https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=1000&auto=format&fit=crop'],
-        category: 'Accessories',
-        sizes: ['One Size'],
-      },
-  ];
+  const featured = products?.slice(0, 4) || [];
 
   return (
     <section className="py-24 bg-white">

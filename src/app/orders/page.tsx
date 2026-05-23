@@ -2,16 +2,42 @@
 
 import { useCartStore } from '@/store/useCartStore';
 import { useUIStore } from '@/store/useUIStore';
+import { useQuery } from '@tanstack/react-query';
+import { merchantService } from '@/services/api';
+import { formatWhatsAppMessage } from '@/utils/checkout';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Image from 'next/image';
-import { ShoppingBag, Package, Trash2, ArrowRight } from 'lucide-react';
+import { ShoppingBag, Package, Trash2, ArrowRight, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function OrdersPage() {
-  const { items, orders, getTotalPrice, removeItem } = useCartStore();
+  const { items, getTotalPrice, removeItem } = useCartStore();
   const openCart = useUIStore((state) => state.openCart);
   const [activeTab, setActiveTab] = useState<'cart' | 'tracking'>('cart');
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  const { data: merchant } = useQuery({
+    queryKey: ['merchant'],
+    queryFn: () => merchantService.getMerchant('mensah'),
+  });
+
+  const handleCheckout = () => {
+    if (!merchant?.whatsapp_number) return;
+    setIsCheckingOut(true);
+    
+    const whatsappUrl = formatWhatsAppMessage(
+      items, 
+      getTotalPrice(), 
+      merchant.whatsapp_number
+    );
+    
+    // Smooth transition delay
+    setTimeout(() => {
+      window.open(whatsappUrl, '_blank');
+      setIsCheckingOut(false);
+    }, 1000);
+  };
 
   return (
     <main className="min-h-screen bg-[#F9F9F7] flex flex-col">
@@ -41,7 +67,7 @@ export default function OrdersPage() {
                   : 'text-black/40 hover:text-black'
               }`}
             >
-              Order Tracking ({orders.length})
+              Order Tracking
             </button>
           </div>
 
@@ -90,10 +116,15 @@ export default function OrdersPage() {
                     <p className="text-xs uppercase tracking-widest text-black/50 mb-2">Subtotal</p>
                     <p className="text-3xl font-serif mb-8 text-luxury">GHS {getTotalPrice().toLocaleString()}</p>
                     <button 
-                      onClick={openCart}
-                      className="bg-black text-white px-12 py-5 text-xs uppercase tracking-[0.2em] font-bold hover:bg-luxury transition-all flex items-center gap-3"
+                      onClick={handleCheckout}
+                      disabled={isCheckingOut}
+                      className="bg-black text-white px-12 py-5 text-xs uppercase tracking-[0.2em] font-bold hover:bg-luxury transition-all flex items-center gap-3 disabled:bg-black/20"
                     >
-                      Proceed to Checkout <ArrowRight size={16} />
+                      {isCheckingOut ? (
+                        <>Processing... <Loader2 className="animate-spin" size={16} /></>
+                      ) : (
+                        <>Proceed to WhatsApp Checkout <ArrowRight size={16} /></>
+                      )}
                     </button>
                   </div>
                 </div>
@@ -104,56 +135,13 @@ export default function OrdersPage() {
           {/* Tracking View */}
           {activeTab === 'tracking' && (
             <div className="space-y-8">
-              {orders.length === 0 ? (
-                <div className="bg-white p-20 text-center shadow-sm border border-black/5">
-                  <Package size={48} className="mx-auto text-black/10 mb-6" />
-                  <p className="text-black/50">You have no pending orders.</p>
-                </div>
-              ) : (
-                orders.map((order) => (
-                  <div key={order.id} className="bg-white p-8 shadow-sm border border-black/5">
-                    <div className="flex flex-col md:flex-row justify-between border-b border-black/10 pb-6 mb-6">
-                      <div>
-                        <p className="text-[10px] uppercase tracking-widest text-black/40 mb-1">Order Number</p>
-                        <p className="text-lg font-serif">{order.id}</p>
-                      </div>
-                      <div className="mt-4 md:mt-0">
-                        <p className="text-[10px] uppercase tracking-widest text-black/40 mb-1">Date</p>
-                        <p className="text-sm">{new Date(order.date).toLocaleDateString()}</p>
-                      </div>
-                      <div className="mt-4 md:mt-0">
-                        <p className="text-[10px] uppercase tracking-widest text-black/40 mb-1">Status</p>
-                        <span className="inline-block px-3 py-1 bg-[#D4AF37]/10 text-luxury text-xs font-bold uppercase tracking-wider rounded-full">
-                          {order.status}
-                        </span>
-                      </div>
-                      <div className="mt-4 md:mt-0 text-right">
-                        <p className="text-[10px] uppercase tracking-widest text-black/40 mb-1">Total</p>
-                        <p className="text-lg font-serif">GHS {order.total.toLocaleString()}</p>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h4 className="text-xs uppercase tracking-widest font-bold mb-4">Items</h4>
-                      <div className="space-y-4">
-                        {order.items.map((item, idx) => (
-                          <div key={idx} className="flex gap-4 items-center">
-                            <div className="w-12 h-16 bg-gray-100 relative">
-                              <Image src={item.images[0]} alt={item.name} fill className="object-cover" />
-                            </div>
-                            <div>
-                              <p className="text-sm font-serif">{item.name}</p>
-                              <p className="text-[10px] text-black/50 uppercase tracking-widest">
-                                Size: {item.selectedSize} | Qty: {item.quantity}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
+              <div className="bg-white p-20 text-center shadow-sm border border-black/5">
+                <Package size={48} className="mx-auto text-black/10 mb-6" />
+                <p className="text-black/50">You have no pending orders.</p>
+                <p className="text-[10px] uppercase tracking-widest text-black/30 mt-4">
+                  Orders placed via WhatsApp will appear here once confirmed.
+                </p>
+              </div>
             </div>
           )}
         </div>

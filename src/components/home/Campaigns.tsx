@@ -12,17 +12,23 @@ export default function Campaigns() {
     queryFn: () => campaignService.getCampaigns(),
   });
 
-  const displayCampaigns = campaigns && campaigns.length > 0 ? campaigns : [
-    {
-      id: 'c1',
-      title: 'The Riviera Collection',
-      description: 'Sophisticated linens for the modern traveler.',
-      image_url: 'https://images.unsplash.com/photo-1594932224828-b4b05a83296d?q=80&w=2070&auto=format&fit=crop',
-      link: '/shop?category= Riviera'
-    }
-  ];
+  const displayCampaigns = campaigns || [];
 
-  if (isLoading && !campaigns) return null;
+  if (isLoading && !campaigns) {
+    return (
+      <section className="py-24">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            {[1, 2].map((i) => (
+              <div key={i} className="h-[500px] bg-black/5 animate-pulse rounded-sm" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (displayCampaigns.length === 0) return null;
 
   return (
     <section className="py-24">

@@ -22,26 +22,6 @@ export default function ProductDetailPage() {
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', id],
     queryFn: () => productService.getProduct(id as string),
-    // Fallback mock logic for development
-    initialData: id === '1' ? {
-        id: '1',
-        name: 'The Midnight Tuxedo',
-        description: 'A masterpiece of contemporary tailoring. This tuxedo is hand-cut from the finest S150s Italian wool, featuring silk satin lapels and a modern, sharp silhouette that commands presence. Designed for those who demand excellence in every stitch.',
-        price: 4500,
-        images: [
-            'https://images.unsplash.com/photo-1594932224828-b4b05a83296d?q=80&w=2070&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop'
-        ],
-        category: 'Suits',
-        sizes: ['48', '50', '52', '54', '56'],
-        details: [
-            '100% S150s Italian Wool',
-            'Hand-finished buttonholes',
-            'Half-canvas construction',
-            'Silk satin peak lapels',
-            'Slim-fit silhouette'
-        ]
-    } : undefined
   });
 
   const handleAddToCart = () => {
@@ -55,7 +35,22 @@ export default function ProductDetailPage() {
     }
   };
 
-  if (isLoading) return <div className="h-screen flex items-center justify-center">Loading...</div>;
+  if (isLoading) return (
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      <div className="pt-40 container mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+          <div className="aspect-[3/4] bg-black/5 animate-pulse" />
+          <div className="space-y-8">
+            <div className="h-4 bg-black/5 w-1/4 animate-pulse" />
+            <div className="h-12 bg-black/5 w-3/4 animate-pulse" />
+            <div className="h-6 bg-black/5 w-1/2 animate-pulse" />
+            <div className="h-32 bg-black/5 w-full animate-pulse" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
   if (!product) return <div className="h-screen flex items-center justify-center">Product not found.</div>;
 
   return (

@@ -25,10 +25,17 @@ export const merchantService = {
   getMerchant: async (id: string = 'mensah'): Promise<Merchant> => {
     const response = await api.get(`/merchants/${id}`);
     const data = response.data;
+    
     // Map logo_url if it's relative
     if (data.logo_url && data.logo_url.startsWith('/')) {
       data.logo_url = `${API_BASE_URL}${data.logo_url}`;
     }
+
+    // Ensure whatsapp_number is present (fallback to prompt value if empty)
+    if (!data.whatsapp_number || data.whatsapp_number.trim() === "") {
+      data.whatsapp_number = "0592696949";
+    }
+
     return data;
   },
 };
@@ -40,11 +47,16 @@ export const productService = {
       return response.data.map((item: any) => ({
         id: item.id,
         name: item.name,
-        description: item.description || '',
-        price: item.price_minor, 
+        description: item.description || 'Premium tailored menswear crafted with excellence.',
+        price: item.price_minor / 100, // Convert minor units to major
         images: mapImageUrls(item.image_urls),
         category: 'Apparel',
-        sizes: ['40R', '42R', '44R'],
+        sizes: ['40R', '42R', '44R', '46R'],
+        details: [
+          'Premium Fabric',
+          'Hand-finished details',
+          'Tailored fit',
+        ],
         stock: item.in_stock ? 10 : 0
       }));
     } catch (error) {
@@ -58,11 +70,16 @@ export const productService = {
     return {
       id: item.id,
       name: item.name,
-      description: item.description || '',
-      price: item.price_minor,
+      description: item.description || 'Premium tailored menswear crafted with excellence.',
+      price: item.price_minor / 100, // Convert minor units to major
       images: mapImageUrls(item.image_urls),
       category: 'Apparel',
-      sizes: ['40R', '42R', '44R'],
+      sizes: ['40R', '42R', '44R', '46R'],
+      details: [
+        'Premium Fabric',
+        'Hand-finished details',
+        'Tailored fit',
+      ],
       stock: item.in_stock ? 10 : 0
     };
   },
@@ -75,7 +92,7 @@ export const campaignService = {
       return response.data.map((campaign: any) => ({
         id: campaign.id,
         title: campaign.title,
-        description: campaign.copy_text || '',
+        description: campaign.copy_text || 'Experience the new collection.',
         image_url: mapCampaignImageUrl(campaign.image_urls),
         is_active: true
       }));
