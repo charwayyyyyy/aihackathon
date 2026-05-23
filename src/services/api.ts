@@ -26,7 +26,7 @@ export const productService = {
         name: item.name,
         description: item.description || '',
         price: item.price_minor, 
-        images: item.image_urls || ['https://images.unsplash.com/photo-1594932224828-b4b05a83296d?q=80&w=2070&auto=format&fit=crop'],
+        images: item.image_urls || ['https://images.unsplash.com/photo-1605907997930-67a6d91bb3a2?q=80&w=2070&auto=format&fit=crop'],
         category: 'Apparel',
         sizes: ['40R', '42R', '44R'],
         stock: item.in_stock ? 10 : 0
@@ -44,7 +44,7 @@ export const productService = {
       name: item.name,
       description: item.description || '',
       price: item.price_minor,
-      images: item.image_urls || ['https://images.unsplash.com/photo-1594932224828-b4b05a83296d?q=80&w=2070&auto=format&fit=crop'],
+      images: item.image_urls || ['https://images.unsplash.com/photo-1605907997930-67a6d91bb3a2?q=80&w=2070&auto=format&fit=crop'],
       category: 'Apparel',
       sizes: ['40R', '42R', '44R'],
       stock: item.in_stock ? 10 : 0
@@ -62,7 +62,7 @@ export const campaignService = {
         description: campaign.copy_text || '',
         image_url: (campaign.image_urls && campaign.image_urls.length > 0) 
             ? campaign.image_urls[0] 
-            : 'https://images.unsplash.com/photo-1594932224828-b4b05a83296d?q=80&w=2070&auto=format&fit=crop',
+            : 'https://images.unsplash.com/photo-1610444391696-29171f9f2571?q=80&w=2070&auto=format&fit=crop',
         is_active: true
       }));
     } catch (error) {

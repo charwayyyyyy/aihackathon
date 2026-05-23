@@ -34,20 +34,20 @@ export default function FindYourFit() {
     const defaultProducts: Product[] = [
       {
         id: '1',
-        name: 'The Classic Navy Suit',
-        description: 'A timeless piece for any occasion.',
+        name: 'The Classic Kaftan',
+        description: 'A timeless piece of Ghanaian elegance.',
         price: 4500,
-        images: ['https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=2000&auto=format&fit=crop'],
-        category: 'Suits',
+        images: ['https://images.unsplash.com/photo-1605907997930-67a6d91bb3a2?q=80&w=2000&auto=format&fit=crop'],
+        category: 'Kaftans',
         sizes: ['40R', '42R'],
       },
       {
         id: '2',
-        name: 'Midnight Velvet Tuxedo',
-        description: 'Stand out at your next gala.',
+        name: 'Midnight Velvet Agbada',
+        description: 'Command presence at your next traditional wedding.',
         price: 6200,
-        images: ['https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=2071&auto=format&fit=crop'],
-        category: 'Formal',
+        images: ['https://images.unsplash.com/photo-1584988711833-8a39d8b37494?q=80&w=2071&auto=format&fit=crop'],
+        category: 'Agbada',
         sizes: ['38R', '40R'],
       }
     ];
@@ -70,7 +70,7 @@ export default function FindYourFit() {
               <QuestionBlock
                 key="occasion"
                 question="What is the occasion?"
-                options={['Wedding', 'Business', 'Casual']}
+                options={['Traditional Wedding', 'Business', 'Cultural Event']}
                 onSelect={(val) => handleAnswer('occasion', val)}
               />
             )}
@@ -78,7 +78,7 @@ export default function FindYourFit() {
               <QuestionBlock
                 key="fit"
                 question="How do you prefer your fit?"
-                options={['Slim', 'Classic']}
+                options={['Tailored Slim', 'Traditional Loose']}
                 onSelect={(val) => handleAnswer('fit', val)}
               />
             )}

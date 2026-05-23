@@ -15,10 +15,10 @@ export default function Campaigns() {
   const displayCampaigns = campaigns && campaigns.length > 0 ? campaigns : [
     {
       id: 'c1',
-      title: 'The Riviera Collection',
-      description: 'Sophisticated linens for the modern traveler.',
-      image_url: 'https://images.unsplash.com/photo-1594932224828-b4b05a83296d?q=80&w=2070&auto=format&fit=crop',
-      link: '/shop?category= Riviera'
+      title: 'The Heritage Collection',
+      description: 'Rich textures and vibrant Kente accents for the modern gentleman.',
+      image_url: 'https://images.unsplash.com/photo-1610444391696-29171f9f2571?q=80&w=2070&auto=format&fit=crop',
+      link: '/shop?category=Heritage'
     }
   ];
 
