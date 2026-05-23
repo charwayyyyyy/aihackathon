@@ -10,10 +10,26 @@ const api = axios.create({
   },
 });
 
+const mapImageUrls = (urls: string[] | undefined | null) => {
+  if (!urls || urls.length === 0) return ['/kaftan.webp'];
+  return urls.map(url => url.startsWith('/') ? `${API_BASE_URL}${url}` : url);
+};
+
+const mapCampaignImageUrl = (urls: string[] | undefined | null) => {
+  if (!urls || urls.length === 0) return '/kaftan2.webp';
+  const url = urls[0];
+  return url.startsWith('/') ? `${API_BASE_URL}${url}` : url;
+};
+
 export const merchantService = {
   getMerchant: async (id: string = 'mensah'): Promise<Merchant> => {
     const response = await api.get(`/merchants/${id}`);
-    return response.data;
+    const data = response.data;
+    // Map logo_url if it's relative
+    if (data.logo_url && data.logo_url.startsWith('/')) {
+      data.logo_url = `${API_BASE_URL}${data.logo_url}`;
+    }
+    return data;
   },
 };
 
@@ -26,7 +42,7 @@ export const productService = {
         name: item.name,
         description: item.description || '',
         price: item.price_minor, 
-        images: item.image_urls || ['/kaftan.webp'],
+        images: mapImageUrls(item.image_urls),
         category: 'Apparel',
         sizes: ['40R', '42R', '44R'],
         stock: item.in_stock ? 10 : 0
@@ -44,7 +60,7 @@ export const productService = {
       name: item.name,
       description: item.description || '',
       price: item.price_minor,
-      images: item.image_urls || ['/kaftan.webp'],
+      images: mapImageUrls(item.image_urls),
       category: 'Apparel',
       sizes: ['40R', '42R', '44R'],
       stock: item.in_stock ? 10 : 0
@@ -60,9 +76,7 @@ export const campaignService = {
         id: campaign.id,
         title: campaign.title,
         description: campaign.copy_text || '',
-        image_url: (campaign.image_urls && campaign.image_urls.length > 0) 
-            ? campaign.image_urls[0] 
-            : '/kaftan2.webp',
+        image_url: mapCampaignImageUrl(campaign.image_urls),
         is_active: true
       }));
     } catch (error) {
