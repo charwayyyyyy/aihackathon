@@ -5,6 +5,7 @@ import Hero from "@/components/home/Hero";
 import Categories from "@/components/home/Categories";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
 import Campaigns from "@/components/home/Campaigns";
+import FindYourFit from "@/components/home/FindYourFit";
 import Footer from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 
@@ -38,6 +39,8 @@ export default function Home() {
         </div>
       </section>
 
+      <FindYourFit />
+      
       <FeaturedProducts />
 
       <Campaigns />

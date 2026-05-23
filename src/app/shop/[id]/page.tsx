@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { ChevronRight, Plus, Minus, Info } from 'lucide-react';
+import Link from 'next/link';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -50,7 +51,7 @@ export default function ProductDetailPage() {
       return;
     }
     if (product) {
-      addItem(product, selectedSize);
+      addItem(product, selectedSize, quantity);
       openCart();
     }
   };
@@ -199,5 +200,4 @@ export default function ProductDetailPage() {
   );
 }
 
-// Simple Link helper since it was missing in imports
-import Link from 'next/link';
+

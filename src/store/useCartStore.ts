@@ -1,10 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { CartItem, Product } from '@/types';
-
 interface CartState {
   items: CartItem[];
-  addItem: (product: Product, selectedSize: string) => void;
+  addItem: (product: Product, selectedSize: string, quantity?: number) => void;
   removeItem: (productId: string, size: string) => void;
   updateQuantity: (productId: string, size: string, quantity: number) => void;
   clearCart: () => void;
@@ -16,7 +15,7 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
-      addItem: (product, selectedSize) => {
+      addItem: (product, selectedSize, quantity = 1) => {
         const items = get().items;
         const existingItem = items.find(
           (item) => item.id === product.id && item.selectedSize === selectedSize
@@ -26,13 +25,13 @@ export const useCartStore = create<CartState>()(
           set({
             items: items.map((item) =>
               item.id === product.id && item.selectedSize === selectedSize
-                ? { ...item, quantity: item.quantity + 1 }
+                ? { ...item, quantity: item.quantity + quantity }
                 : item
             ),
           });
         } else {
           set({
-            items: [...items, { ...product, selectedSize, quantity: 1 }],
+            items: [...items, { ...product, selectedSize, quantity }],
           });
         }
       },

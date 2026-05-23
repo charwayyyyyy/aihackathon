@@ -6,6 +6,8 @@ import { X, ShoppingBag, ArrowRight, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { merchantService } from '@/services/api';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -14,6 +16,28 @@ interface CartDrawerProps {
 
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const { items, removeItem, getTotalPrice } = useCartStore();
+
+  const { data: merchant } = useQuery({
+    queryKey: ['merchant'],
+    queryFn: () => merchantService.getMerchant('mensah'),
+  });
+
+  const handleWhatsAppCheckout = () => {
+    if (items.length === 0) return;
+    
+    let message = `Hello Mensah, I'd like to order:\n\n`;
+    items.forEach(item => {
+      message += `- ${item.name} (Size: ${item.selectedSize}, Qty: ${item.quantity})\n`;
+    });
+    message += `\nTotal: GHS ${getTotalPrice().toLocaleString()}`;
+
+    // Fallback number if API is empty
+    const phoneNumber = merchant?.whatsapp_number || '+233000000000';
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    
+    window.open(whatsappUrl, '_blank');
+  };
 
   // Close drawer on escape key
   useEffect(() => {
@@ -112,13 +136,12 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   >
                     View Shopping Bag
                   </Link>
-                  <Link 
-                    href="/cart"
-                    onClick={onClose}
+                  <button 
+                    onClick={handleWhatsAppCheckout}
                     className="w-full border border-black py-4 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-black hover:text-white transition-all flex items-center justify-center gap-2"
                   >
-                    Checkout <ArrowRight size={14} />
-                  </Link>
+                    Checkout via WhatsApp <ArrowRight size={14} />
+                  </button>
                 </div>
               </div>
             )}
