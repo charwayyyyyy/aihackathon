@@ -16,11 +16,17 @@ export default function Campaigns() {
 
   if (isLoading && !campaigns) {
     return (
-      <section className="py-24">
+      <section className="section-padding">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-14 gap-4">
+            <div>
+              <div className="skeleton h-3 w-20 mb-3" />
+              <div className="skeleton h-8 w-48" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[1, 2].map((i) => (
-              <div key={i} className="h-[500px] bg-black/5 animate-pulse rounded-sm" />
+              <div key={i} className="aspect-[4/5] skeleton" />
             ))}
           </div>
         </div>
@@ -31,31 +37,61 @@ export default function Campaigns() {
   if (displayCampaigns.length === 0) return null;
 
   return (
-    <section className="py-24">
+    <section className="section-padding">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {displayCampaigns.map((campaign, idx) => (
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-14 gap-4"
+        >
+          <div>
+            <span className="label text-luxury mb-3 block">Campaigns</span>
+            <h2 className="text-3xl md:text-4xl font-serif">Current Season</h2>
+          </div>
+          <Link
+            href="/campaign"
+            className="label text-black/50 hover:text-luxury border-b border-black/20 hover:border-luxury pb-1 transition-all duration-300"
+          >
+            View All Campaigns
+          </Link>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {displayCampaigns.slice(0, 4).map((campaign, idx) => (
             <motion.div
               key={campaign.id}
-              initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.15, duration: 0.6 }}
               viewport={{ once: true }}
-              className="relative group h-[500px] overflow-hidden"
+              className={`relative group overflow-hidden ${
+                idx === 0 && displayCampaigns.length > 2
+                  ? 'md:col-span-2 h-[400px] md:h-[550px]'
+                  : 'h-[350px] md:h-[450px]'
+              }`}
             >
               <Image
                 src={campaign.image_url}
                 alt={campaign.title}
                 fill
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                className="object-cover transition-transform duration-[800ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
-              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 text-white">
-                <span className="text-[10px] uppercase tracking-[0.3em] mb-4">New Campaign</span>
-                <h3 className="text-3xl font-serif mb-4">{campaign.title}</h3>
-                <p className="text-sm text-white/70 max-w-xs mb-8">{campaign.description}</p>
-                <Link 
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent group-hover:from-black/70 transition-all duration-500" />
+              
+              <div className="absolute inset-0 flex flex-col items-start justify-end p-8 md:p-10 text-white">
+                <span className="label text-white/50 mb-2">Campaign</span>
+                <h3 className={`font-serif mb-3 ${idx === 0 ? 'text-3xl md:text-4xl' : 'text-2xl md:text-3xl'}`}>
+                  {campaign.title}
+                </h3>
+                <p className="text-sm text-white/60 max-w-md mb-6 line-clamp-2">
+                  {campaign.description}
+                </p>
+                <Link
                   href={campaign.link || '/shop'}
-                  className="px-8 py-3 border border-white text-[10px] uppercase tracking-widest font-bold hover:bg-white hover:text-black transition-all"
+                  className="btn text-[10px] border border-white/40 text-white hover:bg-white hover:text-black transition-all duration-300 py-3 px-6"
                 >
                   View Campaign
                 </Link>

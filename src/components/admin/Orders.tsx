@@ -1,65 +1,103 @@
 'use client';
 
 import { useOrderStore } from '@/store/useOrderStore';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, Clock, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Orders() {
   const orders = useOrderStore((state) => state.orders);
+  const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
   return (
-    <div className="bg-white shadow-sm border border-black/5 overflow-hidden">
-      <div className="p-6 border-b border-black/5">
-        <h2 className="font-serif text-xl">Recent Orders</h2>
+    <div className="bg-white border border-black/5 rounded-sm overflow-hidden">
+      <div className="p-5 border-b border-black/5 flex items-center justify-between">
+        <h2 className="font-serif text-lg">Recent Orders</h2>
+        <span className="badge badge-luxury text-[9px]">{orders.length} total</span>
       </div>
-      <div className="divide-y divide-black/5">
+
+      <div className="divide-y divide-black/5 max-h-[600px] overflow-y-auto">
         {orders.length === 0 ? (
           <div className="p-12 text-center flex flex-col items-center">
-            <ShoppingBag size={48} className="text-black/10 mb-4" />
-            <p className="text-black/50">No orders yet.</p>
+            <div className="w-14 h-14 rounded-full bg-neutral-50 flex items-center justify-center mb-4">
+              <ShoppingBag size={22} className="text-black/15" />
+            </div>
+            <p className="text-sm text-black/40 mb-1">No orders yet</p>
+            <p className="text-[11px] text-black/25">Orders from WhatsApp checkout will appear here.</p>
           </div>
         ) : (
           orders.map((order) => (
-            <div key={order.id} className="p-6 flex flex-col lg:flex-row gap-8">
-              <div className="flex-1">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="font-bold mb-1">{order.id}</h3>
-                    <p className="text-xs text-black/50">{new Date(order.createdAt).toLocaleString()}</p>
+            <div key={order.id} className="hover:bg-neutral-50/50 transition-colors">
+              {/* Order Header */}
+              <button
+                onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
+                className="w-full p-4 flex items-center justify-between text-left"
+              >
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[13px] font-semibold">{order.id}</span>
+                    <span className="badge badge-warning text-[8px] py-0.5 px-1.5">
+                      <Clock size={9} className="mr-0.5" /> Pending
+                    </span>
                   </div>
-                  <span className="bg-luxury/10 text-luxury px-3 py-1 text-[10px] uppercase tracking-widest font-bold">
-                    Pending
+                  <div className="flex items-center gap-3 text-[11px] text-black/35">
+                    <span>{order.customer.name}</span>
+                    <span>•</span>
+                    <span>{new Date(order.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-serif text-luxury font-medium">
+                    GHS {order.total.toLocaleString()}
                   </span>
+                  <ChevronRight
+                    size={14}
+                    className={`text-black/20 transition-transform ${
+                      expandedOrder === order.id ? 'rotate-90' : ''
+                    }`}
+                  />
                 </div>
-                
-                <div className="bg-gray-50 p-4 mb-4 text-sm">
-                  <p><span className="font-bold">Customer:</span> {order.customer.name}</p>
-                  <p><span className="font-bold">Phone:</span> {order.customer.phone}</p>
-                  <p><span className="font-bold">Location:</span> {order.customer.location}</p>
-                </div>
-              </div>
-              
-              <div className="flex-1 lg:max-w-md">
-                <h4 className="text-xs uppercase tracking-widest font-bold mb-4">Items</h4>
-                <div className="space-y-3 mb-4">
-                  {order.items.map((item: any, idx: number) => (
-                    <div key={idx} className="flex gap-3 text-sm">
-                      <div className="relative w-10 h-12 bg-gray-200 flex-shrink-0">
-                         <Image src={item.images[0]} alt={item.name} fill className="object-cover" />
+              </button>
+
+              {/* Order Detail (Expandable) */}
+              <AnimatePresence>
+                {expandedOrder === order.id && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="px-4 pb-4 space-y-3">
+                      {/* Customer Info */}
+                      <div className="bg-neutral-50 p-3 rounded-sm text-[12px] space-y-1">
+                        <p><span className="font-medium text-black/50">Phone:</span> {order.customer.phone}</p>
+                        <p><span className="font-medium text-black/50">Location:</span> {order.customer.location}</p>
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-xs">{item.name}</p>
-                        <p className="text-[10px] text-black/50 uppercase">Size: {item.selectedSize} | Qty: {item.quantity}</p>
+
+                      {/* Items */}
+                      <div className="space-y-2">
+                        {order.items.map((item: any, idx: number) => (
+                          <div key={idx} className="flex items-center gap-3">
+                            <div className="relative w-8 h-10 bg-neutral-100 rounded-sm overflow-hidden flex-shrink-0">
+                              <Image src={item.images[0]} alt={item.name} fill className="object-cover" sizes="32px" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[12px] font-medium truncate">{item.name}</p>
+                              <p className="text-[10px] text-black/35">Size: {item.selectedSize} × {item.quantity}</p>
+                            </div>
+                            <span className="text-[12px] font-serif text-black/60">
+                              GHS {(item.price * item.quantity).toLocaleString()}
+                            </span>
+                          </div>
+                        ))}
                       </div>
-                      <p className="font-serif">GHS {(item.price * item.quantity).toLocaleString()}</p>
                     </div>
-                  ))}
-                </div>
-                <div className="flex justify-between items-center border-t border-black/10 pt-4">
-                  <span className="text-xs uppercase tracking-widest font-bold text-black/50">Total</span>
-                  <span className="text-xl font-serif text-luxury">GHS {order.total.toLocaleString()}</span>
-                </div>
-              </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ))
         )}

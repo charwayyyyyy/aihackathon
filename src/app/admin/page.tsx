@@ -1,53 +1,62 @@
 'use client';
 
-import RoleGuard from '@/components/auth/RoleGuard';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import DashboardStats from '@/components/admin/DashboardStats';
 import InventoryTable from '@/components/admin/InventoryTable';
 import Orders from '@/components/admin/Orders';
-import { useAuthStore } from '@/store/useAuthStore';
+import { motion } from 'framer-motion';
+import { CalendarDays } from 'lucide-react';
 
 export default function AdminDashboardPage() {
-  const { role, logout } = useAuthStore();
+  const today = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 
   return (
-    <RoleGuard allowedRoles={['admin', 'staff', 'viewer']}>
-      <main className="min-h-screen bg-[#F9F9F7] flex flex-col">
-        <Navbar />
-        
-        <div className="flex-1 pt-32 pb-24">
-          <div className="container mx-auto px-6 max-w-7xl">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 border-b border-black/10 pb-6 gap-4">
-              <div>
-                <h1 className="text-4xl font-serif mb-2">Admin Dashboard</h1>
-                <p className="text-black/50 text-sm">
-                  Logged in as <span className="font-bold text-luxury capitalize">{role}</span>
-                </p>
+    <div className="min-h-screen">
+      {/* Header */}
+      <div className="bg-white border-b border-black/5 px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+          >
+            <div>
+              <h1 className="text-2xl md:text-3xl font-serif mb-1">Dashboard</h1>
+              <div className="flex items-center gap-2 text-sm text-black/35">
+                <CalendarDays size={14} />
+                <span>{today}</span>
               </div>
-              <button 
-                onClick={logout}
-                className="text-xs uppercase tracking-widest font-bold text-black/50 hover:text-black transition-colors bg-white px-6 py-3 border border-black/10"
-              >
-                Sign Out
-              </button>
             </div>
+            <a
+              href="/"
+              className="label text-[10px] text-black/30 hover:text-luxury border border-black/10 px-4 py-2 rounded-sm hover:border-luxury transition-all"
+            >
+              View Store →
+            </a>
+          </motion.div>
+        </div>
+      </div>
 
-            <DashboardStats />
+      {/* Content */}
+      <div className="px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto">
+          <DashboardStats />
 
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-              <div className="xl:col-span-2 space-y-8">
-                <InventoryTable />
-              </div>
-              <div className="xl:col-span-1 space-y-8">
-                <Orders />
-              </div>
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
+            <div className="xl:col-span-2">
+              <InventoryTable />
+            </div>
+            <div className="xl:col-span-1">
+              <Orders />
             </div>
           </div>
         </div>
-
-        <Footer />
-      </main>
-    </RoleGuard>
+      </div>
+    </div>
   );
 }

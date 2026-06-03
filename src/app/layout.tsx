@@ -15,7 +15,23 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Mensah | Luxury Tailored Menswear",
-  description: "Experience the pinnacle of luxury tailored menswear with Mensah.",
+  description:
+    "Experience the pinnacle of luxury tailored menswear with Mensah. Discover meticulously crafted suits, traditional kaftans, and bespoke garments.",
+  keywords: [
+    "luxury menswear",
+    "tailored suits",
+    "kaftan",
+    "bespoke fashion",
+    "Mensah",
+    "Ghanaian fashion",
+  ],
+  openGraph: {
+    title: "Mensah | Luxury Tailored Menswear",
+    description:
+      "Discover meticulously crafted suits, traditional kaftans, and bespoke garments from Mensah.",
+    type: "website",
+    siteName: "Mensah",
+  },
 };
 
 export default function RootLayout({
