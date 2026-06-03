@@ -27,6 +27,7 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { isCartOpen, openCart, closeCart } = useUIStore();
   const itemCount = useCartStore((state) => state.getItemCount());
@@ -38,6 +39,7 @@ export default function Navbar() {
   if (pathname?.startsWith('/admin')) return null;
 
   useEffect(() => {
+    setIsMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
@@ -171,7 +173,7 @@ export default function Navbar() {
               aria-label={`Shopping bag with ${itemCount} items`}
             >
               <ShoppingBag size={19} className="group-hover:text-luxury transition-colors duration-300" />
-              {itemCount > 0 && (
+              {isMounted && itemCount > 0 && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
