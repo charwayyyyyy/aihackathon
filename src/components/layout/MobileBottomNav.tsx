@@ -1,5 +1,5 @@
 'use client';
-
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCartStore } from '@/store/useCartStore';
@@ -19,6 +19,11 @@ export default function MobileBottomNav() {
   const pathname = usePathname();
   const itemCount = useCartStore((state) => state.getItemCount());
   const openCart = useUIStore((state) => state.openCart);
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Don't show on admin pages
   if (pathname?.startsWith('/admin')) return null;
@@ -57,7 +62,7 @@ export default function MobileBottomNav() {
             >
               <div className="relative">
                 <Icon size={20} strokeWidth={active ? 2.2 : 1.8} />
-                {item.action === 'cart' && itemCount > 0 && (
+                {item.action === 'cart' && isMounted && itemCount > 0 && (
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}

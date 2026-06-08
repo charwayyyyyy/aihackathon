@@ -155,22 +155,20 @@ export default function Navbar() {
               <Search size={19} />
             </button>
 
-            {/* Admin Link — Only visible if admin/staff */}
-            {(role === 'admin' || role === 'staff') && (
-              <Link
-                href="/admin"
-                className="hidden md:flex p-2 hover:text-luxury transition-colors duration-300"
-                aria-label="Admin dashboard"
-              >
-                <User size={19} />
-              </Link>
-            )}
+            {/* Admin Link */}
+            <Link
+              href={(isMounted && (role === 'admin' || role === 'staff')) ? '/admin' : '/admin/login'}
+              className="hidden md:flex p-2 hover:text-luxury transition-colors duration-300"
+              aria-label="Admin dashboard"
+            >
+              <User size={19} />
+            </Link>
 
             {/* Cart */}
             <button
               onClick={openCart}
               className="relative p-2 group"
-              aria-label={`Shopping bag with ${itemCount} items`}
+              aria-label={`Shopping bag with ${isMounted ? itemCount : 0} items`}
             >
               <ShoppingBag size={19} className="group-hover:text-luxury transition-colors duration-300" />
               {isMounted && itemCount > 0 && (

@@ -17,6 +17,10 @@ export default function AdminLoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    if (password !== 'admin123') {
+      alert('Invalid password. Please use admin123');
+      return;
+    }
     setIsLoading(true);
     // Simulate auth delay
     setTimeout(() => {
@@ -99,7 +103,7 @@ export default function AdminLoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter any password (demo)"
+                  placeholder="Enter admin123"
                   className="input pr-10"
                 />
                 <button
@@ -110,7 +114,7 @@ export default function AdminLoginPage() {
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-              <p className="text-[10px] text-black/25 mt-1.5">Demo mode — any password works</p>
+              <p className="text-[10px] text-black/25 mt-1.5">Please use admin123 to login</p>
             </div>
 
             {/* Submit */}
