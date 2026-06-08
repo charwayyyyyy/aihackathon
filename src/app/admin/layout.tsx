@@ -29,20 +29,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  // Skip layout for login page
-  if (pathname === '/admin/login') {
-    return <>{children}</>;
-  }
-
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
-    if (isMounted && !['admin', 'staff', 'viewer'].includes(role)) {
+    if (isMounted && pathname !== '/admin/login' && !['admin', 'staff', 'viewer'].includes(role)) {
       router.push('/admin/login');
     }
-  }, [role, router, isMounted]);
+  }, [role, router, isMounted, pathname]);
+
+  // Skip layout for login page
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
 
   if (!isMounted) return null;
 
