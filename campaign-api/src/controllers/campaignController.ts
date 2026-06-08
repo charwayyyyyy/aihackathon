@@ -40,6 +40,7 @@ export const getActiveCampaigns = async (req: Request, res: Response): Promise<v
     
     res.json(formatted);
   } catch (error) {
+    console.error('getActiveCampaigns error:', error);
     res.status(500).json({ error: 'Failed to fetch active campaigns' });
   }
 };
@@ -57,6 +58,7 @@ export const getAllCampaigns = async (req: Request, res: Response): Promise<void
     
     res.json(formatted);
   } catch (error) {
+    console.error('getAllCampaigns error:', error);
     res.status(500).json({ error: 'Failed to fetch all campaigns' });
   }
 };
@@ -77,6 +79,7 @@ export const getCampaignById = async (req: Request, res: Response): Promise<void
       targetProducts: JSON.parse(campaign.targetProducts)
     });
   } catch (error) {
+    console.error('getCampaignById error:', error);
     res.status(500).json({ error: 'Failed to fetch campaign' });
   }
 };
@@ -101,6 +104,7 @@ export const createCampaign = async (req: Request, res: Response): Promise<void>
       targetProducts: JSON.parse(campaign.targetProducts)
     });
   } catch (error) {
+    console.error('createCampaign error:', error);
     if (error instanceof z.ZodError) {
       res.status(400).json({ error: error.issues });
     } else {
@@ -136,6 +140,7 @@ export const updateCampaign = async (req: Request, res: Response): Promise<void>
       targetProducts: JSON.parse(campaign.targetProducts)
     });
   } catch (error) {
+    console.error('updateCampaign error:', error);
     if (error instanceof z.ZodError) {
       res.status(400).json({ error: error.issues });
     } else {
@@ -151,6 +156,7 @@ export const deleteCampaign = async (req: Request, res: Response): Promise<void>
     });
     res.status(204).send();
   } catch (error) {
+    console.error('deleteCampaign error:', error);
     res.status(500).json({ error: 'Failed to delete campaign' });
   }
 };
