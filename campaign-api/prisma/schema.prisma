@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Campaign {
+  id                 String   @id @default(uuid())
+  title              String
+  description        String
+  type               String   // "banner", "discount", "collection", "hero"
+  status             String   // "draft", "active", "expired"
+  imageUrl           String
+  discountPercentage Float?
+  targetProducts     String   // Storing JSON array of strings (product IDs)
+  startDate          DateTime
+  endDate            DateTime
+  priority           Int      @default(0)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}

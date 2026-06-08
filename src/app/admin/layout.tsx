@@ -16,7 +16,7 @@ const SIDEBAR_LINKS = [
   { href: '/admin#orders', label: 'Orders', icon: ShoppingBag },
   { href: '/admin#customers', label: 'Customers', icon: Users },
   { href: '/admin#analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/admin#promotions', label: 'Promotions', icon: Tag },
+  { href: '/admin/campaigns', label: 'Campaigns', icon: Tag },
   { href: '/admin#settings', label: 'Settings', icon: Settings },
 ];
 

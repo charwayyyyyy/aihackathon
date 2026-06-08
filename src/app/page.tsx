@@ -12,10 +12,13 @@ import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import { motion } from "framer-motion";
 
+import CampaignBanner from "@/components/home/CampaignBanner";
+
 export default function Home() {
   return (
     <main className="min-h-screen overflow-x-hidden">
       <Navbar />
+      <CampaignBanner />
 
       {/* 1. Hero */}
       <Hero />
