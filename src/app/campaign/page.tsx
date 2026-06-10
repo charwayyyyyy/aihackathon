@@ -7,7 +7,6 @@ import MobileBottomNav from '@/components/layout/MobileBottomNav';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 
@@ -65,12 +64,11 @@ export default function CampaignPage() {
                   viewport={{ once: true }}
                   className="relative group overflow-hidden h-[350px] md:h-[500px]"
                 >
-                  <Image
+                  {/* Use <img> for both base64 data URIs and remote URLs */}
+                  <img
                     src={campaign.image_url}
                     alt={campaign.title}
-                    fill
-                    className="object-cover transition-transform duration-[800ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
-                    sizes="100vw"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[800ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="absolute inset-0 flex flex-col items-start justify-end p-8 md:p-12 text-white">

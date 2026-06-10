@@ -1,5 +1,5 @@
 import { Campaign } from '@/services/campaignService';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, ImageIcon } from 'lucide-react';
 
 interface CampaignsTableProps {
   campaigns: Campaign[];
@@ -31,6 +31,7 @@ export default function CampaignsTable({ campaigns, isLoading, onEdit, onDelete 
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="border-b border-black/5 bg-neutral-50/50">
+            <th className="p-4 text-xs font-medium text-black/40 uppercase tracking-wider">Image</th>
             <th className="p-4 text-xs font-medium text-black/40 uppercase tracking-wider">Title</th>
             <th className="p-4 text-xs font-medium text-black/40 uppercase tracking-wider">Type</th>
             <th className="p-4 text-xs font-medium text-black/40 uppercase tracking-wider">Status</th>
@@ -42,6 +43,19 @@ export default function CampaignsTable({ campaigns, isLoading, onEdit, onDelete 
         <tbody className="text-sm">
           {campaigns.map((campaign) => (
             <tr key={campaign.id} className="border-b border-black/5 hover:bg-neutral-50/50 transition-colors">
+              <td className="p-4">
+                {campaign.imageData ? (
+                  <img 
+                    src={campaign.imageData} 
+                    alt={campaign.title} 
+                    className="w-12 h-12 object-cover rounded-md border border-black/5"
+                  />
+                ) : (
+                  <div className="w-12 h-12 bg-neutral-100 rounded-md flex items-center justify-center">
+                    <ImageIcon size={16} className="text-black/20" />
+                  </div>
+                )}
+              </td>
               <td className="p-4 font-medium">{campaign.title}</td>
               <td className="p-4 capitalize">{campaign.type}</td>
               <td className="p-4">

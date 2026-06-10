@@ -88,14 +88,47 @@ export const productService = {
 export const campaignService = {
   getCampaigns: async (merchantId: string = 'mensah'): Promise<Campaign[]> => {
     try {
-      const response = await api.get(`/merchants/${merchantId}/campaigns`);
-      return response.data.map((campaign: any) => ({
-        id: campaign.id,
-        title: campaign.title,
-        description: campaign.copy_text || 'Experience the new collection.',
-        image_url: mapCampaignImageUrl(campaign.image_urls),
-        is_active: true
-      }));
+      // Fetch from both sources in parallel
+      const [externalResult, internalResult] = await Promise.allSettled([
+        api.get(`/merchants/${merchantId}/campaigns`),
+        axios.get('/api/campaigns')
+      ]);
+
+      const campaigns: Campaign[] = [];
+
+      // Process external API campaigns
+      if (externalResult.status === 'fulfilled') {
+        const externalCampaigns = externalResult.value.data.map((campaign: any) => ({
+          id: campaign.id,
+          title: campaign.title,
+          description: campaign.copy_text || 'Experience the new collection.',
+          image_url: mapCampaignImageUrl(campaign.image_urls),
+          is_active: true
+        }));
+        campaigns.push(...externalCampaigns);
+      }
+
+      // Process internal API (admin-created) campaigns
+      if (internalResult.status === 'fulfilled') {
+        const internalCampaigns = internalResult.value.data.map((campaign: any) => ({
+          id: campaign.id,
+          title: campaign.title,
+          description: campaign.description || 'Experience the new collection.',
+          image_url: campaign.imageData || '/kaftan2.webp',
+          link: '/shop',
+          is_active: campaign.status === 'active',
+          // Carry through extra fields for the banner/hero components
+          type: campaign.type,
+          discountPercentage: campaign.discountPercentage,
+          priority: campaign.priority || 0,
+        }));
+        campaigns.push(...internalCampaigns);
+      }
+
+      // Sort by priority (higher first) — campaigns without priority default to 0
+      campaigns.sort((a: any, b: any) => (b.priority || 0) - (a.priority || 0));
+
+      return campaigns;
     } catch (error) {
       console.error('Error fetching campaigns:', error);
       return [];

@@ -23,6 +23,8 @@ export default function AdminCampaignsPage() {
     mutationFn: campaignService.deleteCampaign,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-campaigns'] });
+      queryClient.invalidateQueries({ queryKey: ['active-campaigns'] });
+      queryClient.invalidateQueries({ queryKey: ['campaigns'] });
     }
   });
 

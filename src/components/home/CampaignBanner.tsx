@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { campaignService } from '@/services/campaignService';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X, ChevronRight, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -60,9 +60,9 @@ export default function CampaignBanner() {
       {/* Optional Hero Campaign block - could be rendered somewhere else or below the navbar */}
       {heroCampaign && (
         <section className="relative w-full h-[60vh] min-h-[400px] bg-neutral-100 overflow-hidden">
-          {heroCampaign.imageUrl && (
+          {heroCampaign.imageData && (
             <img 
-              src={heroCampaign.imageUrl} 
+              src={heroCampaign.imageData} 
               alt={heroCampaign.title}
               className="absolute inset-0 w-full h-full object-cover"
             />

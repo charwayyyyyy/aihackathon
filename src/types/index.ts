@@ -27,6 +27,9 @@ export interface Campaign {
   image_url: string;
   link?: string;
   is_active: boolean;
+  type?: string;
+  discountPercentage?: number | null;
+  priority?: number;
 }
 
 export interface CartItem extends Product {
