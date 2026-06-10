@@ -1,0 +1,16 @@
+{
+  "watch": [
+    "next.config.ts",
+    ".env.local",
+    ".env",
+    "src/app/api/**/*.ts"
+  ],
+  "ext": "ts,json",
+  "ignore": [
+    "node_modules",
+    ".next",
+    "campaign-api",
+    "campaigns-data.json"
+  ],
+  "exec": "next dev"
+}
