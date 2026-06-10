@@ -433,23 +433,46 @@ it instantly shows on the public storefront
 3. Enter the password: **`admin123`**
 4. You'll be redirected to the admin dashboard
 
-### Features
+### Sidebar Navigation & Dynamic Modules
+All options in the admin sidebar are fully functional:
+- **Dashboard:** Operational center displaying live store telemetry: total product varieties, simulated customer counts, dynamic revenue metrics, and order counts.
+- **Products:** Stock inventory inspector to keep track of catalog status, categories, and prices.
+- **Orders:** Order management CRM detailing customer shipping information, ordered items, and order status tracking.
+- **Campaigns:** Marketing management console offering full CRUD support (Create, Read, Update, Delete) to schedule storefront promotional campaigns.
+- **Settings:** Full store behavior override hub (Store identity, WhatsApp targets, and storefront copy).
 
-| Section | Capabilities |
-|---|---|
-| **Dashboard** | Overview statistics — total products, orders, revenue, customers |
-| **Products** | View and manage inventory |
-| **Orders** | Track and manage customer orders |
-| **Campaigns** | Full CRUD — Create, Read, Update, Delete marketing campaigns |
-| **Settings** | Store configuration |
+---
+
+## Key Advanced Features & Custom Integrations
+
+### 1. Conversational WhatsApp Commerce
+Rather than using traditional payment gateways, **MENSAH** utilizes high-conversion conversational commerce:
+- **WhatsApp Checkout:** When a user checks out from their cart drawer, their selections, sizes, and quantities are compiled into a beautifully formatted, line-by-line markdown invoice and sent directly to the vendor's WhatsApp DM. This allows the master tailors to coordinate bespoke sizing and payment directly.
+- **Formal Contact Dispatch:** Submitting the form on the *Contact Us* page structures customer queries and routes them directly to the vendor's WhatsApp in a clean, formal message layout.
+
+### 2. Live Page Content Customization
+Admins have code-free control over the copywriting of customer-facing pages directly from the **Settings** panel:
+- **About Page Copy:** Customize the hero title, subtitle, main story paragraph, and brand quote.
+- **Contact Page Copy:** Update the title and support copy displayed to customers.
+- Changes reflect **live and in real-time** across the storefront without requiring code changes, rebuilding, or static page redeployments.
+
+### 3. Device-Native Campaign Image Uploader
+- When creating or editing campaigns, admins can select images directly from their device (mobiles or desktop computers).
+- The application processes the selected file, converts it to a standard base64 data URL, and saves it directly into the campaign database, ensuring that custom media displays instantly on storefront campaigns.
+
+### 4. Serverless `/tmp` Override Storage (Vercel Compatibility)
+- Because standard serverless deployment environments (such as Vercel) utilize a read-only filesystem, direct local filesystem writes fail in production.
+- To resolve this, the Next.js API endpoints write configuration data to `/tmp/settings-data.json` when running in serverless mode (`process.env.VERCEL`), providing a robust database-free settings persistency layer that works perfectly out-of-the-box on Vercel deployments.
+
+---
 
 ### Campaign Management
 
 The Campaigns page at `/admin/campaigns` provides:
 
 - **Table view** of all campaigns with title, type, status, dates, and actions
-- **Create** new campaigns via a modal form
-- **Edit** existing campaigns inline
+- **Create** new campaigns via a modal form with local file uploading
+- **Edit** existing campaigns inline (including updating media files)
 - **Delete** campaigns with confirmation
 - **Status badges** showing Draft (gray), Active (green), and Expired (red)
 
