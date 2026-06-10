@@ -1,5 +1,7 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
+import { merchantService } from '@/services/api';
 import Navbar from '@/components/layout/Navbar';
 import MobileBottomNav from '@/components/layout/MobileBottomNav';
 import Footer from '@/components/layout/Footer';
@@ -33,6 +35,16 @@ const values = [
 ];
 
 export default function AboutPage() {
+  const { data: merchant, isLoading } = useQuery({
+    queryKey: ['merchant'],
+    queryFn: () => merchantService.getMerchant('mensah'),
+  });
+
+  const title = merchant?.aboutTitle || 'The Heritage of Mensah';
+  const subtitle = merchant?.aboutSubtitle || 'Born from a passion for exquisite tailoring, Mensah represents the pinnacle of luxury menswear.';
+  const story = merchant?.aboutStory || 'Our master tailors bring decades of experience to every cut, stitch, and finish. We source only the finest fabrics from world-renowned mills.';
+  const quote = merchant?.aboutQuote || 'We don\'t just make clothes. We create confidence, preserve culture, and craft legacy.';
+
   return (
     <main className="min-h-screen bg-white">
       <Navbar />
@@ -52,11 +64,17 @@ export default function AboutPage() {
             className="max-w-3xl"
           >
             <span className="label text-luxury mb-3 block">Our Story</span>
-            <h1 className="text-4xl md:text-6xl font-serif mb-6">The Heritage of Mensah</h1>
-            <p className="text-black/50 text-lg leading-relaxed">
-              Born from a passion for exquisite tailoring, Mensah represents the pinnacle of luxury menswear.
-              Every garment tells a story of meticulous craftsmanship, uncompromising quality, and timeless elegance.
-            </p>
+            {isLoading ? (
+              <>
+                <div className="skeleton h-12 w-3/4 mb-6" />
+                <div className="skeleton h-20 w-full" />
+              </>
+            ) : (
+              <>
+                <h1 className="text-4xl md:text-6xl font-serif mb-6">{title}</h1>
+                <p className="text-black/50 text-lg leading-relaxed">{subtitle}</p>
+              </>
+            )}
           </motion.div>
         </div>
       </section>
@@ -74,7 +92,7 @@ export default function AboutPage() {
             >
               <Image
                 src="/kaftan3.webp"
-                alt="Ghanaian Craftsmanship"
+                alt="Craftsmanship"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -89,15 +107,11 @@ export default function AboutPage() {
             >
               <div className="divider" />
               <h2 className="text-3xl md:text-4xl font-serif">The Art of Tailoring</h2>
-              <p className="text-black/50 leading-relaxed">
-                Our master tailors bring decades of experience to every cut, stitch, and finish. We source only the
-                finest fabrics from world-renowned mills, ensuring that every piece that bears the Mensah name is a
-                testament to sartorial excellence.
-              </p>
-              <p className="text-black/50 leading-relaxed">
-                From the precise drape of a jacket to the perfect break of a trouser, we obsess over the details
-                because true luxury lies in the unseen.
-              </p>
+              {isLoading ? (
+                <div className="skeleton h-24 w-full" />
+              ) : (
+                <p className="text-black/50 leading-relaxed">{story}</p>
+              )}
               <Link href="/shop" className="btn btn-primary inline-flex py-3 px-8 mt-4">
                 Explore Collection
               </Link>
@@ -152,12 +166,16 @@ export default function AboutPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-2xl md:text-4xl font-serif italic leading-relaxed mb-8">
-              &ldquo;We don&apos;t just make clothes. We create confidence, preserve culture, and craft legacy.&rdquo;
-            </h2>
+            {isLoading ? (
+              <div className="skeleton bg-white/10 h-16 w-full mb-8" />
+            ) : (
+              <h2 className="text-2xl md:text-4xl font-serif italic leading-relaxed mb-8">
+                &ldquo;{quote}&rdquo;
+              </h2>
+            )}
             <div className="flex justify-center items-center gap-4">
               <div className="w-10 h-[1px] bg-white/20" />
-              <span className="label text-white/30">Mensah Founder</span>
+              <span className="label text-white/30">{merchant?.name || 'Mensah'} Founder</span>
               <div className="w-10 h-[1px] bg-white/20" />
             </div>
           </motion.div>

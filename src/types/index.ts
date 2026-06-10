@@ -16,8 +16,15 @@ export interface Merchant {
   name: string;
   description: string;
   logo_url: string;
-  brand_colors: string[];
   whatsapp_number: string;
+  aboutTitle?: string;
+  aboutSubtitle?: string;
+  aboutStory?: string;
+  aboutQuote?: string;
+  contactTitle?: string;
+  contactSubtitle?: string;
+  email?: string;
+  location?: string;
 }
 
 export interface Campaign {

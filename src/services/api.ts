@@ -23,20 +23,63 @@ const mapCampaignImageUrl = (urls: string[] | undefined | null) => {
 
 export const merchantService = {
   getMerchant: async (id: string = 'mensah'): Promise<Merchant> => {
-    const response = await api.get(`/merchants/${id}`);
-    const data = response.data;
-    
-    // Map logo_url if it's relative
-    if (data.logo_url && data.logo_url.startsWith('/')) {
-      data.logo_url = `${API_BASE_URL}${data.logo_url}`;
-    }
+    try {
+      const [externalResult, settingsResult] = await Promise.allSettled([
+        api.get(`/merchants/${id}`),
+        axios.get('/api/settings')
+      ]);
 
-    // Ensure whatsapp_number is present (fallback to prompt value if empty)
-    if (!data.whatsapp_number || data.whatsapp_number.trim() === "") {
-      data.whatsapp_number = "233592696949";
-    }
+      let data: any = {};
+      if (externalResult.status === 'fulfilled') {
+        data = externalResult.value.data;
+      }
 
-    return data;
+      // Map logo_url if it's relative
+      if (data.logo_url && data.logo_url.startsWith('/')) {
+        data.logo_url = `${API_BASE_URL}${data.logo_url}`;
+      }
+
+      // Override with local settings if available
+      if (settingsResult.status === 'fulfilled') {
+        const settings = settingsResult.value.data;
+        // Strip any formatting from whatsapp (like '+' or spaces) to make it an ID/number
+        const rawWhatsApp = settings.whatsapp.replace(/[^0-9]/g, '');
+        data.whatsapp_number = rawWhatsApp || '233592696949';
+        
+        // Also we can pass other settings via merchant object if needed by frontend
+        data.name = settings.storeName;
+        data.description = settings.tagline;
+        data.currency = settings.currency;
+        data.email = settings.email;
+        data.location = settings.location;
+
+        // Pass through page content fields
+        data.aboutTitle = settings.aboutTitle;
+        data.aboutSubtitle = settings.aboutSubtitle;
+        data.aboutStory = settings.aboutStory;
+        data.aboutQuote = settings.aboutQuote;
+        
+        data.contactTitle = settings.contactTitle;
+        data.contactSubtitle = settings.contactSubtitle;
+      } else {
+        if (!data.whatsapp_number || data.whatsapp_number.trim() === "") {
+          data.whatsapp_number = "233592696949";
+        }
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error fetching merchant:', error);
+      return {
+        id: id,
+        name: 'Mensah',
+        description: 'Luxury Tailored Menswear',
+        currency: 'GHS',
+        logo_url: '/mensah.png',
+        brand_colors: ['#000000', '#ffffff'],
+        whatsapp_number: '233592696949',
+      } as Merchant;
+    }
   },
 };
 

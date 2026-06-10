@@ -1,0 +1,14 @@
+{
+  "storeName": "Mensah",
+  "tagline": "Luxury Tailored Menswear",
+  "currency": "GHS (Ghanaian Cedi)",
+  "whatsapp": "+233 59 269 6949",
+  "email": "info@mensah.com",
+  "location": "Kumasi, Ghana",
+  "brandColor": "#B8860B (Luxury Gold)",
+  "font": "Playfair Display / Inter",
+  "style": "Luxury Minimalist",
+  "newOrderAlerts": "WhatsApp redirect",
+  "campaignExpiry": "Auto-status update",
+  "lowStockAlerts": "Dashboard indicator"
+}
